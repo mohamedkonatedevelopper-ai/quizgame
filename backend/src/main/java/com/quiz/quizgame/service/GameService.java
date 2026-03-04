@@ -38,6 +38,8 @@ public class GameService
 		session.setCurrentQuestionIndex ( 0 );
 		session.setQuestionStartTime ( LocalDateTime.now () );
 
+		System.out.println ( "📊 TOTAL QUESTIONS: " + quizRepo.count () );
+		
 		return sessionRepo.save ( session );
 	}
 
