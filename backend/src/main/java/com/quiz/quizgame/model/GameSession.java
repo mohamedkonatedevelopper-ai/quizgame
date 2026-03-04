@@ -19,8 +19,6 @@ public class GameSession
 	@GeneratedValue ( strategy = GenerationType.IDENTITY )
 	private long id;
 
-	private String playerName;
-
 	private int score;
 
 	private int currentQuestionIndex;

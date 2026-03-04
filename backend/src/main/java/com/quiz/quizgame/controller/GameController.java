@@ -21,9 +21,9 @@ public class GameController
 	}
 
 	@PostMapping ( "/start" )
-	public ResponseEntity < GameSession > start ( @RequestParam String playerName )
+	public ResponseEntity < GameSession > start ()
 	{
-		return ResponseEntity.ok ( service.startGame ( playerName ) );
+		return ResponseEntity.ok ( service.startGame () );
 	}
 
 	@GetMapping ( "/{sessionId}/question" )

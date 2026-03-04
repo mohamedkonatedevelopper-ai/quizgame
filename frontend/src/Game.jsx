@@ -4,7 +4,16 @@ import "./game.css";
 
 function Game() {
 
-    const [playerName, setPlayerName] = useState("");
+    /* ==============================
+       CONFIG
+    ============================== */
+
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
+    /* ==============================
+       STATES
+    ============================== */
+
     const [sessionId, setSessionId] = useState(null);
     const [question, setQuestion] = useState(null);
     const [score, setScore] = useState(0);
@@ -13,12 +22,13 @@ function Game() {
     const [gameOver, setGameOver] = useState(false);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [correctAnswer, setCorrectAnswer] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const intervalRef = useRef(null);
 
-    /* =====================================================
+    /* ==============================
        TIMER
-    ===================================================== */
+    ============================== */
 
     useEffect(() => {
 
@@ -50,9 +60,9 @@ function Game() {
 
     }, [question]);
 
-    /* =====================================================
+    /* ==============================
        TIMEOUT
-    ===================================================== */
+    ============================== */
 
     const handleTimeout = async () => {
 
@@ -61,7 +71,7 @@ function Game() {
         try {
 
             await axios.post(
-                `http://localhost:8080/api/game/${sessionId}/answer`,
+                `${API_URL}/api/game/${sessionId}/answer`,
                 null,
                 {params: {answer: null}}
             );
@@ -69,21 +79,25 @@ function Game() {
             await loadNextQuestion(sessionId);
 
         } catch (err) {
+
             console.error("Timeout error", err);
             setGameOver(true);
+
         }
     };
 
-    /* =====================================================
+    /* ==============================
        START GAME
-    ===================================================== */
+    ============================== */
 
     const startGame = async () => {
 
         try {
 
+            setLoading(true);
+
             const response = await axios.post(
-                `http://localhost:8080/api/game/start?playerName=${playerName}`
+                `${API_URL}/api/game/start`
             );
 
             const id = response.data.id;
@@ -95,20 +109,22 @@ function Game() {
             await loadNextQuestion(id);
 
         } catch (err) {
+
             console.error("Start error", err);
+
         }
     };
 
-    /* =====================================================
+    /* ==============================
        LOAD QUESTION
-    ===================================================== */
+    ============================== */
 
     const loadNextQuestion = async (id) => {
 
         try {
 
             const response = await axios.get(
-                `http://localhost:8080/api/game/${id}/question`
+                `${API_URL}/api/game/${id}/question`
             );
 
             setQuestion(response.data);
@@ -118,56 +134,75 @@ function Game() {
             setMessage("");
 
         } catch (err) {
-            // Si backend retourne Game Over
+
             setGameOver(true);
             setQuestion(null);
+
+        } finally {
+
+            setLoading(false);
+
         }
     };
 
-    /* =====================================================
+    /* ==============================
        SUBMIT ANSWER
-    ===================================================== */
+    ============================== */
 
     const submitAnswer = async (answer) => {
+
+        if (!sessionId) return;
 
         setSelectedAnswer(answer);
 
         try {
 
             const response = await axios.post(
-                `http://localhost:8080/api/game/${sessionId}/answer`,
+                `${API_URL}/api/game/${sessionId}/answer`,
                 null,
                 {params: {answer}}
             );
 
-            setScore(response.data.score);
-            setMessage(response.data.message);
+            const {score: newScore, message: msg, gameOver: isGameOver} = response.data;
 
-            if (response.data.message === "Correct!") {
+            setScore(newScore);
+            setMessage(msg);
+
+            if (msg === "Correct!") {
                 setCorrectAnswer(answer);
             }
 
-            // ⛔ SUPPRIME le return immédiat
-            // On gère gameOver après le délai
-
             setTimeout(() => {
 
-                if (response.data.gameOver) {
-                    setGameOver(true);
+                // 🔥 Toujours mettre à jour le score AVANT transition
+                setScore(response.data.score);
+
+                // 🔥 Si dernière question → on affiche d'abord la réponse
+                if (isGameOver) {
+
+                    // On attend que l'utilisateur voie le résultat
+                    setTimeout(() => {
+                        setGameOver(true);
+                    }, 700);
+
                 } else {
+
                     loadNextQuestion(sessionId);
                 }
 
-            }, 1000);
+            }, 500);
 
         } catch (err) {
+
+            console.error("Answer error", err);
             setGameOver(true);
+
         }
     };
 
-    /* =====================================================
+    /* ==============================
        UI
-    ===================================================== */
+    ============================== */
 
     return (
         <div className="game-container">
@@ -180,8 +215,14 @@ function Game() {
 
                         <br/>
 
-                        <button className="start-btn" onClick={startGame}>
-                            <h3 className="start-btn-text"> {">"}</h3>
+                        <button
+                            className="start-btn"
+                            onClick={startGame}
+                            disabled={loading}
+                        >
+                            <h3 className="start-btn-text">
+                                {loading ? "Loading..." : ">"}
+                            </h3>
                         </button>
                     </>
 
@@ -189,8 +230,15 @@ function Game() {
 
                     <>
                         <h1 className="game-over">Game Over</h1>
-                        <h2 className="final-score">Final Score: {score}</h2>
-                        <button className="btn-restart" onClick={() => window.location.reload()}>
+
+                        <h2 className="final-score">
+                            Final Score: {score}
+                        </h2>
+
+                        <button
+                            className="btn-restart"
+                            onClick={() => window.location.reload()}
+                        >
                             RESTART
                         </button>
                     </>
@@ -204,7 +252,10 @@ function Game() {
                                 <p className="score-letter">score</p>
                                 <p className="score-number">{score}</p>
                             </div>
-                            <div className={`number ${timer < 10 ? "middle" : ""} ${timer < 5 ? "danger" : ""}`}>
+
+                            <div
+                                className={`number ${timer < 10 ? "middle" : ""} ${timer < 5 ? "danger" : ""}`}
+                            >
                                 {timer}
                             </div>
                         </div>
@@ -216,19 +267,20 @@ function Game() {
 
                                     {question.image_url && (
                                         <img
-                                            src={`http://localhost:8080/${question.image_url}`}
+                                            src={`${API_URL}/${question.image_url}`}
                                             alt="question"
                                             className="question-image"
                                         />
                                     )}
                                 </div>
+
                                 {["option_1", "option_2", "option_3", "option_4"].map((key) => (
                                     <button
                                         key={key}
                                         className={`answer-btn
-            ${selectedAnswer === question[key] && correctAnswer === question[key] ? "correct" : ""}
-            ${selectedAnswer === question[key] && correctAnswer !== question[key] ? "wrong" : ""}
-        `}
+                                            ${selectedAnswer === question[key] && correctAnswer === question[key] ? "correct" : ""}
+                                            ${selectedAnswer === question[key] && correctAnswer !== question[key] ? "wrong" : ""}
+                                        `}
                                         onClick={() => submitAnswer(question[key])}
                                         disabled={selectedAnswer !== null}
                                     >
@@ -243,6 +295,7 @@ function Game() {
                         </div>
 
                     </>
+
                 )}
 
             </div>

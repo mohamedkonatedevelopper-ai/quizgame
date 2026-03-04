@@ -29,11 +29,10 @@ public class GameService
 	}
 
 	// 🎮 START GAME
-	public GameSession startGame ( String playerName )
+	public GameSession startGame ()
 	{
 
 		GameSession session = new GameSession ();
-		session.setPlayerName ( playerName );
 		session.setScore ( 0 );
 		session.setFinished ( false );
 		session.setCurrentQuestionIndex ( 0 );
@@ -112,6 +111,7 @@ public class GameService
 		if ( gameOver )
 		{
 			session.setFinished ( true );
+			sessionRepo.save ( session );
 		}
 
 		sessionRepo.save ( session );
@@ -119,6 +119,11 @@ public class GameService
 		System.out.println ( "🔥 SCORE BEFORE RETURN: " + session.getScore () );
 		System.out.println ( "🔥 CURRENT INDEX: " + session.getCurrentQuestionIndex () );
 		return Map.of ( "message" , correct ? "Correct!" : "Wrong!" , "score" , session.getScore () , "gameOver" , gameOver );
+	}
+
+	private void deleteSession ( Long sessionId )
+	{
+		sessionRepo.deleteById ( sessionId );
 	}
 
 	private GameSession getSession ( Long sessionId )
