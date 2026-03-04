@@ -1,10 +1,12 @@
 package com.quiz.quizgame.job;
 
+import com.quiz.quizgame.model.GameSession;
 import com.quiz.quizgame.repository.GameSessionRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class CleanupGameSessionJob
@@ -24,20 +26,14 @@ public class CleanupGameSessionJob
 
 		System.out.println ( "🧹 CLEANUP JOB RUNNING..." );
 
-		sessionRepo.findAll ().forEach ( session ->
-		                                 {
+		LocalDateTime limit = LocalDateTime.now ().minusMinutes ( 10 );
 
-			                                 if ( session.isFinished () )
-			                                 {
+		List < GameSession > sessions = sessionRepo.findByFinishedTrueAndQuestionStartTimeBefore ( limit );
 
-				                                 // 🔥 Supprimer si terminé depuis plus de 5 minutes
-				                                 if ( session.getQuestionStartTime () != null && session.getQuestionStartTime ().isBefore ( LocalDateTime.now ().minusMinutes ( 5 ) ) )
-				                                 {
-
-					                                 sessionRepo.delete ( session );
-				                                 }
-			                                 }
-
-		                                 } );
+		if ( ! sessions.isEmpty () )
+		{
+			System.out.println ( "🗑 Deleting " + sessions.size () + " sessions" );
+			sessionRepo.deleteAll ( sessions );
+		}
 	}
 }
