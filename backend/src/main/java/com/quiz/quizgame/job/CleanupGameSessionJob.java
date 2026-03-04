@@ -26,14 +26,25 @@ public class CleanupGameSessionJob
 
 		System.out.println ( "🧹 CLEANUP JOB RUNNING..." );
 
-		LocalDateTime limit = LocalDateTime.now ().minusMinutes ( 10 );
+		LocalDateTime limit = LocalDateTime.now ().minusMinutes ( 30 );
 
 		List < GameSession > sessions = sessionRepo.findByFinishedTrueAndQuestionStartTimeBefore ( limit );
 
 		if ( ! sessions.isEmpty () )
 		{
-			System.out.println ( "🗑 Deleting " + sessions.size () + " sessions" );
-			sessionRepo.deleteAll ( sessions );
+
+			sessions.forEach ( session ->
+			                   {
+
+				                   // ✅ Sécurité supplémentaire avant suppression
+				                   if ( session.isFinished () && session.getCurrentQuestionIndex () > 0 )
+				                   {
+
+					                   System.out.println ( "🗑 Deleting session id: " + session.getId () );
+
+					                   sessionRepo.delete ( session );
+				                   }
+			                   } );
 		}
 	}
 }
