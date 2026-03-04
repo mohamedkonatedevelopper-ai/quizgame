@@ -267,7 +267,7 @@ function Game() {
 
                                     {question.image_url && (
                                         <img
-                                            src={`${API_URL}/${question.image_url}`}
+                                            src={`${API_URL}${question.image_url}`}
                                             alt="question"
                                             className="question-image"
                                         />

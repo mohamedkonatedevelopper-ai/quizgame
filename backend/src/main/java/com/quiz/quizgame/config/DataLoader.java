@@ -19,8 +19,6 @@ public class DataLoader
 	@PostConstruct
 	public void loadData ()
 	{
-
-		// 🔥 Si des questions existent → on ne fait rien
 		if ( quizRepository.count () > 0 )
 		{
 			System.out.println ( "📦 Questions already exist — skipping data load." );
@@ -35,7 +33,7 @@ public class DataLoader
 		q1.setOption_2 ( "4" );
 		q1.setOption_3 ( "5" );
 		q1.setOption_4 ( "6" );
-		q1.setImage_url ( "images/france.jpg" );
+		q1.setImage_url ( "/images/france.jpg" ); // OK
 		q1.setAnswer ( "4" );
 
 		Quiz q2 = new Quiz ();
@@ -44,7 +42,7 @@ public class DataLoader
 		q2.setOption_2 ( "Madrid" );
 		q2.setOption_3 ( "Paris" );
 		q2.setOption_4 ( "Rome" );
-		q1.setImage_url ( "images/france.jpg" );
+		q2.setImage_url ( "/images/france.jpg" ); // ✅ FIX
 		q2.setAnswer ( "Paris" );
 
 		quizRepository.save ( q1 );
