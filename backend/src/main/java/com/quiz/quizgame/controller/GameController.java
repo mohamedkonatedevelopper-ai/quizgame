@@ -9,7 +9,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping ( "/api/game" )
-@CrossOrigin ( origins = "http://localhost:5173" )
+@CrossOrigin ( origins = "https://quizgame-page.onrender.com" )
 public class GameController
 {
 
