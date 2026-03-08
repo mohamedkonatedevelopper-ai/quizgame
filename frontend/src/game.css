@@ -33,7 +33,7 @@ body {
     display: flex;
     align-items: start;
     justify-content: center;
-    background: linear-gradient(135deg, #0f0f0f, #404040);
+    background: linear-gradient(135deg, #000000, #2b2724);
 }
 
 /* 🃏 Carte centrale */
@@ -47,14 +47,14 @@ body {
 
 /* 🏆 Titres */
 h1 {
-    width: 100%;
     height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 32px;
-    color: #67ffa9;
-    text-shadow: #1c1c2b 5px 5px 5px;
+    background: linear-gradient(45deg, #ffffff, rgba(143, 136, 82, 0.62), #ffdd00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-top: 100px;
     margin-bottom: 50px;
 }
@@ -75,17 +75,17 @@ h2 {
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    color: #67ffa9;
-    text-shadow: #1c1c2b 5px 5px 5px;
+    background: linear-gradient(45deg, #ffffff, rgba(143, 136, 82, 0.62), #ffdd00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 15px;
 }
 
 .question-image {
-    width: 300px;
-    height: 150px;
-    margin-bottom: 20px;
+    width: 200px;
+    height: 100px;
+    margin-bottom: 30px;
     border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 /* 🧑 Input */
@@ -134,29 +134,38 @@ input:hover {
 
 /* 🔘 Boutons */
 .start-btn {
-    height: 50px;
-    width: 50px;
+    height: 90px;
+    width: 90px;
     border-radius: 50%;
     font-size: 16px;
     cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.26);
-    box-shadow: 0 0 20px rgba(156, 245, 255, 0.26);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(255, 213, 0, 0.29));
+    text-shadow: 0 0 0 rgba(255, 255, 255, 0.26);
     color: #ffffff;
     transition: 0.3s;
     border: none;
+}
+
+.start-btn:hover {
+    width: 80px;
+    height: 80px;
+    border-radius: 20%;
+    font-size: 14px;
 }
 
 .start-btn-text {
 
 }
 
-/* Hover */
-.start-btn:hover {
-    height: 55px;
-    width: 55px;
-    background-color: #a0ffbc;
-    color: #000000;
+.loading {
+    margin-top: 100px;
+    background: linear-gradient(45deg, #ffffff, rgb(143, 136, 82), #ffdd00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: 0.3s;
 }
+
+/* Hover */
 
 /* Timer */
 .timer {
@@ -165,7 +174,6 @@ input:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #717171, #131313);
     border-radius: 10px 10px 0 0;
 }
 
@@ -209,7 +217,9 @@ input:hover {
 .score-letter {
     font-size: 30px;
     font-weight: bold;
-    color: #ffffff;
+    background: linear-gradient(45deg, #ffffff, rgba(143, 136, 82, 0.62), #ffdd00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-right: 50px;
 }
 
@@ -230,72 +240,91 @@ input:hover {
 
 /* Game Over */
 .game-over {
-    font-size: 28px;
+    font-size: 40px;
     margin: 100px 0 0 0;
-    width: 100%;
     height: 150px;
-    color: #fffc4d;
+    background: linear-gradient(45deg, #ffffff, rgba(255, 60, 0, 0.68), #ffdd00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .final-score {
     width: 100%;
-    height: 150px;
-    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    margin-bottom: 50px;
+}
+
+.final-score-letter {
+    height: 100%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.final-score-number {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 30px;
+    background: linear-gradient(45deg, #ffffff, rgb(193, 255, 185), #d5ffa7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .btn-restart {
     cursor: pointer;
     border: none;
     margin-top: 50px;
-    width: 100px;
-    height: 40px;
+    width: 200px;
+    height: 50px;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 40px;
     box-shadow: 0 20px 20px rgba(0, 0, 0, 0.26);
-    background: #2e6047;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(255, 213, 0, 0.29));
     color: #fff;
 }
 
 .btn-restart:hover {
-    width: 105px;
-    height: 45px;
-    font-weight: bold;
     border-radius: 5px;
     box-shadow: 0 0 0 rgba(0, 0, 0, 0.26);
-    background: rgba(5, 2, 2, 0.54);
-    transition: 0.2s ease;
+    transition: 0.3s ease;
 }
 
 /* Boutons réponses */
 .answer-btn {
     width: 90%;
-    margin: 8px;
+    margin: 15px;
     padding: 12px;
     border-radius: 12px;
     border: none;
     font-size: 16px;
     cursor: pointer;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.53);
-    background-color: rgba(42, 42, 64, 0.58);
-    color: white;
+    background-color: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.56);
+    font-weight: bold;
     transition: 0.3s ease;
 }
 
 .answer-btn:hover {
-    background-color: rgba(126, 126, 181, 0.39);
-    transform: scale(1.03);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.15);
 }
 
 /* Bonne réponse */
 .correct {
     background-color: #00cc66 !important;
+    color: white;
     animation: glowGreen 0.5s ease-in-out infinite alternate;
 }
 
 /* Mauvaise réponse */
 .wrong {
     background-color: #cc0033 !important;
+    color: white;
     animation: glowRed 0.5s ease-in-out infinite alternate;
 }
 
@@ -303,17 +332,21 @@ input:hover {
 @keyframes glowGreen {
     from {
         box-shadow: 0 0 5px #00ff99;
+        color: rgba(255, 255, 255, 0.56);
     }
     to {
-        box-shadow: 0 0 20px #00ff99;
+        color: white;
+        box-shadow: 0 0 10px #00ff99;
     }
 }
 
 @keyframes glowRed {
     from {
-        box-shadow: 0 0 20px #ff3535;
+        box-shadow: 0 0 5px #ff3535;
+        color: rgba(255, 255, 255, 0.56);
     }
     to {
-        box-shadow: 0 0 20px #ff3535;
+        color: white;
+        box-shadow: 0 0 10px #ff3535;
     }
 }

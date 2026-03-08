@@ -9,7 +9,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping ( "/api/game" )
-@CrossOrigin ( origins = "https://quizgame-page.onrender.com" )
 public class GameController
 {
 
@@ -29,7 +28,6 @@ public class GameController
 	@GetMapping ( "/{sessionId}/question" )
 	public ResponseEntity < ? > getQuestion ( @PathVariable long sessionId )
 	{
-
 		try
 		{
 			return ResponseEntity.ok ( service.getQuestion ( sessionId ) );
@@ -43,7 +41,6 @@ public class GameController
 	@PostMapping ( "/{sessionId}/answer" )
 	public ResponseEntity < Map < String, Object > > answer ( @PathVariable long sessionId , @RequestParam ( required = false ) String answer )
 	{
-
 		return ResponseEntity.ok ( service.submitAnswer ( sessionId , answer ) );
 	}
 }

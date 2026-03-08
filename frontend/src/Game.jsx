@@ -8,7 +8,9 @@ function Game() {
        CONFIG
     ============================== */
 
+    //
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    console.log("API_URL =", import.meta.env.VITE_API_URL);
 
     /* ==============================
        STATES
@@ -25,6 +27,25 @@ function Game() {
     const [loading, setLoading] = useState(false);
 
     const intervalRef = useRef(null);
+
+    /* ==============================
+   LOADING ANIMATION
+============================== */
+
+    const [loadingText, setLoadingText] = useState(""); // nouveau state pour le texte animé
+
+    useEffect(() => {
+        if (!loading) return;
+
+        let dots = 0;
+        const interval = setInterval(() => {
+            dots = (dots + 1) % 4; // cycle 0 → 1 → 2 → 3 → 0
+            setLoadingText("Loading" + ".".repeat(dots));
+        }, 500);
+
+        return () => clearInterval(interval);
+
+    }, [loading]);
 
     /* ==============================
        TIMER
@@ -211,7 +232,7 @@ function Game() {
                 {!sessionId ? (
 
                     <>
-                        <h1>WELCOME TO THE QUIZ GAME</h1>
+                        <h1>ПРОВЕРЬ СВОИ ЗНАНИЯ</h1>
 
                         <br/>
 
@@ -221,9 +242,13 @@ function Game() {
                             disabled={loading}
                         >
                             <h3 className="start-btn-text">
-                                {loading ? "Loading..." : ">"}
+                                {" старт "}
                             </h3>
                         </button>
+
+                        <h3 className="loading">
+                            {loading ? loadingText : ""}
+                        </h3>
                     </>
 
                 ) : gameOver ? (
@@ -232,14 +257,15 @@ function Game() {
                         <h1 className="game-over">Game Over</h1>
 
                         <h2 className="final-score">
-                            Final Score: {score}
+                            <h1 className="final-score-letter">Final Score :</h1>
+                            <h1 className="final-score-number">{score}/{100}</h1>
                         </h2>
 
                         <button
                             className="btn-restart"
                             onClick={() => window.location.reload()}
                         >
-                            RESTART
+                            ПЕРЕЗАПУСК
                         </button>
                     </>
 
